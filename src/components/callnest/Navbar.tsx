@@ -1,0 +1,15 @@
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
+const LOGO_URL = 'https://zgnpmogdjnnhpwewavnr.supabase.co/storage/v1/object/public/project-images/7e7182ac-57cf-4f81-810a-66e4102512c9/attach-1791765739326-b2773535.jpeg';
+
+export default function Navbar({ onStartTrial }: { onStartTrial: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [shadow, setShadow] = useState(false);
+  const loc = useLocation();
+  useEffect(() => { const f = () => setShadow(window.scrollY > 4); window.addEventListener('scroll', f, { passive: true }); f(); return () => window.removeEventListener('scroll', f); }, []);
+  useEffect(() => { setOpen(false); }, [loc.pathname]);
+  const links: [string,string][] = [['How It Works','/how-it-works'],['Features','/features'],['AI Features','/ai-features'],['Pricing','/pricing'],["Who It's For",'/who-its-for'],['FAQ','/faq']];
+  const active = (to: string) => loc.pathname === to;
+  return <header className={`sticky top-0 z-40 bg-white transition-shadow ${shadow ? 'shadow-md' : ''}`}><nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"><Link to="/" aria-label="Callnest home" data-logo className="shrink-0"><div style={{ background:'#0f172a', borderRadius:'8px', padding:'4px 10px', display:'inline-flex', alignItems:'center' }}><img src={LOGO_URL} alt="Callnest logo" onError={e => { e.currentTarget.style.display='none'; }} style={{ height:'32px', width:'auto', objectFit:'contain', display:'block' }} /></div></Link><div className="hidden items-center gap-5 lg:flex">{links.map(([label,to]) => <Link key={to} to={to} className={`text-sm font-medium transition-colors hover:text-blue-600 ${active(to) ? 'text-blue-600 underline' : 'text-slate-600'}`}>{label}</Link>)}<Link to="/early-access" className="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-blue-600">App <span className="ml-1 rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-bold text-orange-600">SOON</span></Link><button onClick={onStartTrial} className="cn-btn-primary px-4 py-2 text-sm">Start free trial</button></div><button aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(v => !v)} className="text-2xl text-slate-700 lg:hidden">{open ? '✕' : '☰'}</button></nav>{open && <div className="border-t bg-white px-5 pb-5 lg:hidden">{links.map(([label,to]) => <div className="border-b py-3" key={to}><Link to={to} onClick={() => setOpen(false)} className={`block text-sm font-medium ${active(to) ? 'text-blue-600' : 'text-slate-700'}`}>{label}</Link></div>)}<div className="border-b py-3"><Link to="/early-access" onClick={() => setOpen(false)} className="flex items-center gap-1 text-sm font-medium text-slate-700">App <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-bold text-orange-600">SOON</span></Link></div><button onClick={() => { setOpen(false); onStartTrial(); }} className="cn-btn-primary mt-4 w-full">Start free trial</button></div>}</header>;
+}

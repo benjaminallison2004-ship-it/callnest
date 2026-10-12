@@ -1,0 +1,3 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+export default function AnnouncementBar(){const [visible,setVisible]=useState(true);useEffect(()=>{if(sessionStorage.getItem('cn_bar_dismissed')==='1')setVisible(false)},[]);if(!visible)return null;return <div className="relative bg-blue-600 px-4 py-2 text-center text-sm text-white">📱 The Callnest app is coming soon. <Link to="/early-access" className="font-semibold underline">Join the early access list →</Link><button aria-label="Dismiss announcement" onClick={()=>{sessionStorage.setItem('cn_bar_dismissed','1');setVisible(false)}} className="absolute right-3 top-1/2 -translate-y-1/2 text-xl">×</button></div>}
